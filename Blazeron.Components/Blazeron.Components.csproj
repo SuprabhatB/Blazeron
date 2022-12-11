@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Authors>Suprabhat Biswal</Authors>
+		<Product>Blazeron</Product>
+		<Company />
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Remove="compilerconfig.json" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Ensure.That" Version="10.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.17" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="compilerconfig.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Blazeron.Utilities\Blazeron.Utilities.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Localization\BlazeronLocale.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>BlazeronLocale.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Localization\BlazeronLocale.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>BlazeronLocale.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\packages\bootstrap\" />
+	</ItemGroup>
+
+</Project>

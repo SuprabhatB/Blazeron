@@ -1,0 +1,13 @@
+﻿<div class="@CombinedCardStyle">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public BorderSizeType BorderSize { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+
+    string CardStyle => UIConstants.CardPrefix;
+    string BorderSizeStyle => BorderSize.GetBorderSize();
+    string CombinedCardStyle => string.Join(SeparatorConstants.SeparatedBySpaceOnly, CardStyle, BorderSizeStyle, CSSClass).RemoveWhiteSpaces();
+}

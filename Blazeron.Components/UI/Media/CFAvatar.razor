@@ -1,0 +1,53 @@
+﻿<img src="@Source" class="@CombinedAvatarStyle" @attributes="Attributes" />
+
+
+@code {
+    [Parameter] public SizeType Size { get; set; }
+    [Parameter] public ImageBorderType Border { get; set; }
+    [Parameter] public string Source { get; set; }
+    [Parameter] public string AlternateText { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+
+    string AvatarStyle => UIConstants.AvatarPrefix;
+    string AvatarSizeStyle => GetAvatarSize();
+    string AvatarBorderStyle => GetAvatarBorder();
+
+    string CombinedAvatarStyle
+        => string.Join(SeparatorConstants.SeparatedBySpaceOnly, AvatarStyle, AvatarSizeStyle, AvatarBorderStyle, CSSClass).RemoveWhiteSpaces();
+
+    IReadOnlyDictionary<string, object> Attributes => GetCustomAttributes();
+
+    string GetAvatarSize()
+    {
+        if (Size == SizeType.None)
+            return default;
+
+        return $"{UIConstants.AvatarPrefix}-{Size.GetDisplayName()}";
+    }
+
+    string GetAvatarBorder()
+    {
+        if (Border == ImageBorderType.None)
+            return default;
+
+        var defaultBorder = UIConstants.RoundedPrefix;
+
+        return Border switch
+        {
+            ImageBorderType.Circle => $"{defaultBorder}-{Border.GetDisplayName()}",
+            _ => defaultBorder
+        };
+    }
+
+    IReadOnlyDictionary<string, object> GetCustomAttributes()
+    {
+        var attributes = new Dictionary<string, object>();
+
+        if (!string.IsNullOrWhiteSpace(AlternateText))
+        {
+            attributes.Add(UIConstants.AttributeImageAlt, AlternateText);
+        }
+
+        return attributes;
+    }
+}

@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Blazeron/bin/Debug
+/.vs
+/Blazeron/obj
+/Blazeron.Components/bin/Debug
+/Blazeron.Components/obj
+/Blazeron.Test/bin/Debug
+/Blazeron.Test/obj
+/Blazeron.Utilities/bin/Debug
+/Blazeron.Utilities/obj

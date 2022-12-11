@@ -1,0 +1,82 @@
+﻿@inject IJSRuntime jsRuntime
+@using Blazeron.Components.UI.Icons
+
+@if (Template != null)
+{
+    <div @ref="elementRef" class="@CombinedAlertStyle" role="alert">
+        @Template
+
+        @if (IsDismissible)
+        {
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="OnDismissingAsync" />
+        }
+    </div>
+}
+else
+{
+    <div @ref="elementRef" class="@CombinedAlertStyle" role="alert">
+        @if (IsShowIcon)
+        {
+            <CFIcon Icon="@IconContent" CSSClass="@IconCSSClass" />
+        }
+
+        <p class="mb-0">@Content</p>
+
+        @if (IsDismissible)
+        {
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="OnDismissingAsync" />
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public RenderFragment Template { get; set; }
+    [Parameter] public ColorType Variant { get; set; }
+    [Parameter] public AnimationEffectType EffectType { get; set; }
+    [Parameter] public string Content { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public string IconContent { get; set; }
+    [Parameter] public string IconCSSClass { get; set; }
+    [Parameter] public bool IsContentHTMLEncoded { get; set; }
+    [Parameter] public bool IsGradient { get; set; }
+    [Parameter] public bool IsShowIcon { get; set; }
+    [Parameter] public bool IsDismissible { get; set; }
+    [Parameter] public bool IsInline { get; set; }
+    [Parameter] public int EffectDuration { get; set; }
+
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    string AlertStyle => UIConstants.AlertPrefix;
+    string AlertVariantStyle => Variant.GetAlertVariant();
+    string AlertGradientStyle => IsGradient ? $"{UIConstants.BackgroundPrefix}-{UIConstants.GradientPrefix}" : default;
+    string AlertDismissibleStyle => IsDismissible ? $"{UIConstants.AlertPrefix}-{UIConstants.DismissiblePrefix}" : default;
+    string AlertInlineStyle => IsInline ? $"{UIConstants.DPrefix}-{UIConstants.FlexPrefix}" : default;
+    string AlertEffectStyle => EffectType.GetAnimationEffectType();
+
+    ElementReference elementRef;
+    DotNetObjectReference<CFAlert> objectRef;
+
+    string CombinedAlertStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly,
+                    AlertStyle,
+                    AlertVariantStyle,
+                    AlertDismissibleStyle,
+                    AlertGradientStyle,
+                    AlertInlineStyle,
+                    CSSClass).RemoveWhiteSpaces();
+
+    async Task OnDismissingAsync()
+    {
+        objectRef = DotNetObjectReference.Create(this);
+
+        await jsRuntime.InvokeVoidAsync(JSConstants.AlertClose, elementRef, AlertEffectStyle, EffectDuration, objectRef, nameof(OnDismissedAsync));
+    }
+
+    [JSInvokable]
+    public async Task OnDismissedAsync()
+    {
+        objectRef?.Dispose();
+
+        await OnClose.InvokeAsync();
+    }
+}

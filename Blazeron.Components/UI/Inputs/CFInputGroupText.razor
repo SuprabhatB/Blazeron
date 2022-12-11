@@ -1,0 +1,12 @@
+﻿<span class="@CombinedGroupTextStyle" id="@Id">@Text</span>
+
+@code {
+    [Parameter] public BorderSizeType BorderSize { get; set; }
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Text { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+
+    string GroupTextStyle => $"{UIConstants.InputGroupPrefix}-{UIConstants.TextPrefix}";
+    string BorderSizeStyle => BorderSize.GetBorderSize();
+    string CombinedGroupTextStyle => string.Join(SeparatorConstants.SeparatedBySpaceOnly, GroupTextStyle, BorderSizeStyle, CSSClass).RemoveWhiteSpaces();
+}

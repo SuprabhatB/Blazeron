@@ -1,0 +1,30 @@
+﻿@inject IJSRuntime jsRunner
+
+@if (Visbility)
+{
+    <i class="@CombinedIconStyle" @onclick="Clicked">
+        <span data-feather="@Name" class="@IconSizeStyle"></span>
+    </i>
+}
+
+@code {
+    [Parameter] public SizeType Size { get; set; }
+    [Parameter] public string Name { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public bool IsNavIcon { get; set; }
+    [Parameter] public bool Visbility { get; set; } = true;
+
+    [Parameter] public EventCallback<MouseEventArgs> Clicked { get; set; }
+
+    string IconNavStyle => IsNavIcon ? $"{UIConstants.NavPrefix}-{UIConstants.IconPrefix}" : default;
+    string IconSizeStyle => GetButtonSizeStyle();
+    string CombinedIconStyle => string.Join(SeparatorConstants.SeparatedBySpaceOnly, IconNavStyle, CSSClass).RemoveWhiteSpaces();
+
+    string GetButtonSizeStyle()
+    {
+        if (Size.Equals(SizeType.None))
+            return default;
+
+        return $"{UIConstants.IconPrefix}-{Size.GetDisplayName()}";
+    }
+}

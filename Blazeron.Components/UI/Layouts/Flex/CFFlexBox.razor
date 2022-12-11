@@ -1,0 +1,67 @@
+﻿<div class="@CombinedFlexStyle">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public SizeType Size { get; set; }
+    [Parameter] public FlexDirectionType RowDirection { get; set; }
+    [Parameter] public FlexDirectionType ColumnDirection { get; set; }
+    [Parameter] public FlexJustifyType Justify { get; set; }
+    [Parameter] public FlexAlignType Align { get; set; }
+    [Parameter] public bool IsInline { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+
+    string FlexStyle => GetFlexStyle();
+    string FlexRowDirectionStyle => GetFlexDirectionStyle(RowDirection, $"{UIConstants.FlexPrefix}-{UIConstants.RowPrefix}");
+    string FlexColumnDirectionStyle => GetFlexDirectionStyle(ColumnDirection, $"{UIConstants.FlexPrefix}-{UIConstants.ColumnPrefix}");
+    string FlexJustifyContentStyle => GetJustifyContentStyle();
+    string FlexAlignItemsStyle => GetAlignItemsStyle();
+    string CombinedFlexStyle
+        => string.Join(SeparatorConstants.SeparatedBySpaceOnly, FlexStyle, FlexRowDirectionStyle, FlexColumnDirectionStyle, FlexAlignItemsStyle, FlexJustifyContentStyle, CSSClass).RemoveWhiteSpaces();
+
+    string GetFlexStyle()
+    {
+        var prefix = UIConstants.DPrefix;
+
+        if (!(Size == SizeType.None))
+        {
+            prefix += $"-{Size.GetDisplayName()}";
+        }
+
+        if (IsInline)
+            prefix += $"-{UIConstants.InlinePrefix}";
+
+        return $"{prefix}-{UIConstants.FlexPrefix}";
+    }
+
+    string GetFlexDirectionStyle(FlexDirectionType direction, string prefix)
+    {
+        if (direction == FlexDirectionType.None)
+            return default;
+
+        var rowDirectionStyle = prefix;
+
+        return direction switch
+        {
+            FlexDirectionType.Reverse => $"{rowDirectionStyle}-{UIConstants.DirectionReverse}",
+            _ => rowDirectionStyle
+        };
+    }
+
+    string GetJustifyContentStyle()
+    {
+        if (Justify == FlexJustifyType.None)
+            return default;
+
+        return $"{UIConstants.FlexJustifyContent}-{Justify.GetDisplayName()}";
+    }
+
+    string GetAlignItemsStyle()
+    {
+        if (Align == FlexAlignType.None)
+            return default;
+
+        return $"{UIConstants.FlexAlignItems}-{Align.GetDisplayName()}";
+    }
+}

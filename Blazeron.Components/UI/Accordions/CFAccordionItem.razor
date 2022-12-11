@@ -1,0 +1,21 @@
+﻿<div class="@CombinedAccordionItemStyle">
+    @ChildContent
+    <CFAccordionHeader>
+        @HeaderTemplate
+    </CFAccordionHeader>
+    <CFAccordionContent>
+        @ContentTemplate
+    </CFAccordionContent>
+</div>
+
+@code{
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment HeaderTemplate { get; set; }
+    [Parameter] public RenderFragment ContentTemplate { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+
+    string AccordionItemStyle => $"{UIConstants.AccordionPrefix}-{UIConstants.ItemPrefix}";
+
+    string CombinedAccordionItemStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly, AccordionItemStyle, CSSClass).RemoveWhiteSpaces();
+}

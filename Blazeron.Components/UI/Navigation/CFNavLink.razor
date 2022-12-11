@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+
+@inherits NavLink
+
+<a class="@CSSClass" aria-label="link"
+   @attributes="@Attributes"
+   @onclick="OnClick"
+   @onclick:preventDefault="IsPreventDefault"
+   @onclick:stopPropagation="IsStopPropagation">
+    @ChildContent
+</a>
+
+@code {
+    [Parameter] public string ID { get; set; }
+    [Parameter] public string Href { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public bool IsPreventDefault { get; set; }
+    [Parameter] public bool IsStopPropagation { get; set; }
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+    Dictionary<string, object> Attributes { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var attributes = new Dictionary<string, object>();
+
+        if (!string.IsNullOrWhiteSpace(ID))
+        {
+            attributes.Add(nameof(ID).ToLower(), ID);
+        }
+
+        if (!string.IsNullOrWhiteSpace(Href))
+        {
+            attributes.Add(nameof(Href).ToLower(), Href);
+        }
+
+        if (!string.IsNullOrWhiteSpace(Title))
+        {
+            attributes.Add(nameof(Title).ToLower(), Title);
+        }
+
+        Attributes = attributes;
+    }
+}

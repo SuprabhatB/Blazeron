@@ -1,0 +1,30 @@
+﻿@page "/component/ui/input/tags"
+@inherits PageComponentsBase
+
+<Header Heading="@Localizer.GetString(BlazeronLocale.TagsInputLabel)" />
+
+<Section SubtractiveHeight="324">
+    <HeaderTemplate>
+        <Styles TStyle="ButtonVariantType" OnClick="e => variantType = e" />
+    </HeaderTemplate>
+    <ContentTemplate>
+        <CFTagBuilder TData="SelectedTags"
+                      Placeholder="@Localizer.GetString(BlazeronLocale.TagsInputDefaultPlaceholderValue)"
+                      Variant="variantType"
+                      OnAdd="ev => SelectedTags = ev"
+                      OnDelete="ev => SelectedTags = ev" />
+
+        <CFFlexBox Align="FlexAlignType.Center" CSSClass="mb-5">
+            <label class="form-control bg-light border rounded-0 mt-3">
+                @SelectedTags.Serialize()
+            </label>
+        </CFFlexBox>
+    </ContentTemplate>
+</Section>
+
+@code{
+
+    IEnumerable<string> SelectedTags { get; set; } = new List<string> { "Apple", "Banana", "Mango", "Grapes" };
+
+    ButtonVariantType variantType;
+}

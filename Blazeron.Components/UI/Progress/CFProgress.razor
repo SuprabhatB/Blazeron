@@ -1,0 +1,43 @@
+﻿<div class="progress">
+    <div class="@CombinedProgressBarVariantStyle" role="progressbar" aria-valuenow="@Value" aria-valuemin="@MinValue" aria-valuemax="@MaxValue"
+         @attributes="@Attributes">
+        @Text
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Value { get; set; }
+    [Parameter] public int MinValue { get; set; }
+    [Parameter] public int MaxValue { get; set; }
+    [Parameter] public string Text { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public bool IsStriped { get; set; }
+    [Parameter] public bool IsAnimate { get; set; }
+    [Parameter] public ColorType Variant { get; set; }
+
+    string ProgressBarStyle => $"{UIConstants.ProgressPrefix}-{UIConstants.BarPrefix}";
+    string ProgressBarVariantStyle => Variant.GetBackgroundVariant();
+    string CombinedProgressBarVariantStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly, ProgressBarStyle, ProgressBarVariantStyle, CSSClass).RemoveWhiteSpaces();
+
+    IDictionary<string, object> Attributes;
+
+    protected override void OnParametersSet()
+    {
+        SetAttributes();
+
+        base.OnParametersSet();
+    }
+
+    void SetAttributes()
+    {
+        var attributes = new Dictionary<string, object>();
+
+        if (Value > 0)
+        {
+            attributes.Add(UIConstants.AttributeStyle, $"width: {Value}%");
+        }
+
+        Attributes = attributes;
+    }
+}

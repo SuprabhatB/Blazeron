@@ -1,0 +1,37 @@
+﻿@page "/component/ui/progress"
+@inherits PageComponentsBase
+
+<Header Heading="@Localizer.GetString(BlazeronLocale.ProgressLabel)" />
+
+<Section>
+    <h2>Basic</h2>
+    <div class="progress-group">
+        <CFProgress Value="0" MinValue="0" MaxValue="100" />
+        <CFProgress Value="25" MinValue="0" MaxValue="100" />
+        <CFProgress Value="50" MinValue="0" MaxValue="100" />
+        <CFProgress Value="75" MinValue="0" MaxValue="100" />
+        <CFProgress Value="100" MinValue="0" MaxValue="100" />
+    </div>
+
+    <h2>Labels</h2>
+    <div class="progress-group">
+        <CFProgress Value="25" MinValue="0" MaxValue="100" Text="25%" />
+        <CFProgress Value="50" MinValue="0" MaxValue="100" Text="50%" />
+        <CFProgress Value="75" MinValue="0" MaxValue="100" Text="75%" />
+        <CFProgress Value="100" MinValue="0" MaxValue="100" Text="100%" />
+    </div>
+
+    <h2>Backgrounds</h2>
+    <div class="progress-group">
+        <CFProgress Variant="ColorType.Primary" Value="25" MinValue="0" MaxValue="100" />
+        <CFProgress Variant="ColorType.Secondary" Value="40" MinValue="0" MaxValue="100" />
+        <CFProgress Variant="ColorType.Success" Value="55" MinValue="0" MaxValue="100" />
+        <CFProgress Variant="ColorType.Danger" Value="70" MinValue="0" MaxValue="100" />
+        <CFProgress Variant="ColorType.Warning" Value="85" MinValue="0" MaxValue="100" />
+        <CFProgress Variant="ColorType.Info" Value="100" MinValue="0" MaxValue="100" />
+    </div>
+</Section>
+
+@code {
+
+}

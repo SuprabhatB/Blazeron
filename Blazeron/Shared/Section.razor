@@ -1,0 +1,63 @@
+﻿@using Blazeron.Components.UI.Cards
+@inject IJSRuntime jSRuntime
+
+@if (HeaderTemplate != null || ContentTemplate != null)
+{
+    <CFCard BorderSize="BorderSizeType.Rounded_0">
+        @if (HeaderTemplate != null)
+        {
+            <CFCardHeader>
+                @HeaderTemplate
+            </CFCardHeader>
+        }
+
+        @if (ContentTemplate != null)
+        {
+            <CFCardBody>
+                <div @ref="contentSectionRef" class="content-section">
+                    @ContentTemplate
+                </div>
+            </CFCardBody>
+        }
+    </CFCard>
+}
+else
+{
+    <CFCard BorderSize="BorderSizeType.Rounded_0">
+        @if (!string.IsNullOrWhiteSpace(Header))
+        {
+            <CFCardHeader>
+                @Header
+            </CFCardHeader>
+        }
+
+        <CFCardBody>
+            <div @ref="contentSectionRef" class="content-section">
+                @ChildContent
+            </div>
+        </CFCardBody>
+    </CFCard>
+}
+
+
+
+@code
+{
+    [Parameter] public RenderFragment HeaderTemplate { get; set; }
+    [Parameter] public RenderFragment ContentTemplate { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public string Header { get; set; }
+    [Parameter] public short SubtractiveHeight { get; set; }
+    [Parameter] public BorderSizeType BorderSizeType { get; set; }
+    [Parameter] public bool IsFixedHeight { get; set; }
+
+    ElementReference contentSectionRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && IsFixedHeight)
+        {
+            await jSRuntime.InvokeVoidAsync(JSConstants.SetSectionSize, contentSectionRef, SubtractiveHeight);
+        }
+    }
+}

@@ -1,0 +1,85 @@
+﻿<button id="@Id" class="@CombinedButtonVariantStyle" type="@ButtonAttributeType" disabled="@IsDisabled"
+        @ref="buttonRef" @attributes="Attributes" @onclick="OnClickAsync">
+    @if (IconPosition == ButtonIconPositionType.Left)
+    {
+        @IconContent
+    }
+
+    @if (string.IsNullOrWhiteSpace(Value))
+    {
+        @ChildContent
+    }
+    else
+    {
+        @Value
+    }
+
+    @if (IconPosition == ButtonIconPositionType.Right)
+    {
+        @IconContent
+    }
+</button>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment IconContent { get; set; }
+    [Parameter] public ButtonType Type { get; set; }
+    [Parameter] public ButtonVariantType Variant { get; set; }
+    [Parameter] public BorderSizeType BorderSize { get; set; }
+    [Parameter] public ButtonSizeType Size { get; set; }
+    [Parameter] public ButtonIconPositionType IconPosition { get; set; }
+    [Parameter] public SpacingType ResetSpacing { get; set; }
+    [Parameter] public bool IsOutlined { get; set; }
+    [Parameter] public bool IsGradient { get; set; }
+    [Parameter] public bool IsDisabled { get; set; }
+    [Parameter] public string Id { get; set; }
+    [Parameter] public string Value { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public IReadOnlyDictionary<string, object> Attributes { get; set; }
+
+    [Parameter] public EventCallback<ButtonClickEvent> OnClick { get; set; }
+
+    ElementReference buttonRef;
+
+    string ButtonAttributeType => Type.GetDisplayName();
+    string ButtonStyle => UIConstants.ButtonPrefix;
+    string ButtonVariantStyle => GetButtonVariantStyle();
+    string ButtonSizeStyle => GetButtonSizeStyle();
+    string BorderSizeStyle => BorderSize.GetBorderSize();
+    string ButtonGradientStyle => Variant != ButtonVariantType.None && IsGradient ? $"{UIConstants.BackgroundPrefix}-{UIConstants.GradientPrefix}" : default;
+
+    string CombinedButtonVariantStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly, ButtonStyle, ButtonVariantStyle, ButtonSizeStyle, BorderSizeStyle, ButtonGradientStyle, CSSClass).RemoveWhiteSpaces();
+
+    string GetButtonVariantStyle()
+    {
+        if (Variant.Equals(ButtonVariantType.None))
+            return default;
+
+        var prefix = $"{UIConstants.ButtonPrefix}-";
+
+        if (Variant.Equals(ButtonVariantType.Link))
+            return $"{prefix}{Variant.GetDisplayName()}";
+
+        if (IsOutlined)
+            prefix += $"{UIConstants.OutlinePrefix}-";
+
+        return $"{prefix}{Variant.GetDisplayName()}";
+    }
+
+    string GetButtonSizeStyle()
+    {
+        if (Size.Equals(ButtonSizeType.None))
+            return default;
+
+        return $"{UIConstants.ButtonPrefix}-{Size.GetDisplayName()}";
+    }
+
+    async Task OnClickAsync(MouseEventArgs args)
+    {
+        if (!IsDisabled)
+        {
+            await OnClick.InvokeAsync(new ButtonClickEvent { MouseEvent = args, Element = buttonRef });
+        }
+    }
+}

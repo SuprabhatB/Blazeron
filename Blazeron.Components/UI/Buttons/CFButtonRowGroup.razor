@@ -1,0 +1,13 @@
+﻿<div class="@CombinedButtonRowGroupStyle">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+
+    string ButtonRowGroupStyle => $"{UIConstants.ButtonPrefix}-{UIConstants.RowGroupPrefix}";
+
+    string CombinedButtonRowGroupStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly, ButtonRowGroupStyle, CSSClass).RemoveWhiteSpaces();
+}

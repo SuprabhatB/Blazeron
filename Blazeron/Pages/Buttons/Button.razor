@@ -1,0 +1,86 @@
+﻿@page "/component/ui/button"
+@inherits PageComponentsBase
+
+<Header Heading="@Localizer.GetString(BlazeronLocale.ButtonLabel)" />
+
+<Section>
+    <h2>
+        @Localizer.GetString(BlazeronLocale.DefaultButtonLabel)
+        <NavIcon ID="@DOMConstants.ButtonDefault" Href="@RouteConstants.Button" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <ButtonGroupView TColor="ButtonVariantType" />
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.OutlineButtonLabel)
+        <NavIcon ID="@DOMConstants.ButtonOutline" Href="@RouteConstants.Button" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <ButtonGroupView TColor="ButtonVariantType" HasOutline="true" />
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.GradientButtonLabel)
+        <NavIcon ID="@DOMConstants.ButtonGradient" Href="@RouteConstants.Button" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <ButtonGroupView TColor="ButtonVariantType" HasGradient="true" />
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.SizesLabel)
+        <NavIcon ID="@DOMConstants.ButtonSizes" Href="@RouteConstants.Button" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <ButtonGroupView TColor="ButtonVariantType" RenderType="ButtonRenderType.Sizes" />
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.SolidButtonDisabledLabel)
+        <NavIcon ID="@DOMConstants.ButtonDisabled" Href="@RouteConstants.Button" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <ButtonGroupView TColor="ButtonVariantType" IsDisabled="true" />
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.OutlineButtonDisabledLabel)
+        <NavIcon ID="@DOMConstants.ButtonOutlineDisabled" Href="@RouteConstants.Button" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <ButtonGroupView TColor="ButtonVariantType" HasOutline="true" IsDisabled="true" />
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.IconButtonLeftLabel)
+        <NavIcon ID="@DOMConstants.ButtonIconLeft" Href="@RouteConstants.Button" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <CFButtonRowGroup>
+        <CFButton Variant="ButtonVariantType.Primary" IconPosition="ButtonIconPositionType.Left" Value="Facebook">
+            <IconContent>
+                <CFButtonIcon Icon="fa fa-facebook" ForeColor="TextColorType.White" CSSClass="me-2" />
+            </IconContent>
+        </CFButton>
+
+        <CFButton Variant="ButtonVariantType.Danger" IconPosition="ButtonIconPositionType.Left" Value="Google">
+            <IconContent>
+                <CFButtonIcon Icon="fa fa-google" ForeColor="TextColorType.White" CSSClass="me-2" />
+            </IconContent>
+        </CFButton>
+    </CFButtonRowGroup>
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.IconButtonRightLabel)
+        <NavIcon ID="@DOMConstants.ButtonIconRight" Href="@RouteConstants.Button" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <CFButtonRowGroup>
+        <CFButton Variant="ButtonVariantType.Primary" IconPosition="ButtonIconPositionType.Right" Value="Facebook">
+            <IconContent>
+                <CFButtonIcon Icon="fa fa-facebook" ForeColor="TextColorType.White" CSSClass="ms-2" />
+            </IconContent>
+        </CFButton>
+
+        <CFButton Variant="ButtonVariantType.Danger" IconPosition="ButtonIconPositionType.Right" Value="Google">
+            <IconContent>
+                <CFButtonIcon Icon="fa fa-google" ForeColor="TextColorType.White" CSSClass="ms-2" />
+            </IconContent>
+        </CFButton>
+    </CFButtonRowGroup>
+</Section>

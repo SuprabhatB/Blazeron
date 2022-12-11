@@ -1,0 +1,15 @@
+﻿@implements IHandleEvent
+@typeparam TStyle
+
+<div class="btn-group-styles">
+    <CFFlexBox Align="FlexAlignType.Center" Justify="FlexJustifyType.Between">
+        <div class="h5 style-header">Styles</div>
+        <ButtonGroupView TColor="TStyle" Size="ButtonSizeType.Small" IsShowLink="false" CSSClass="style-content" OnClick="OnClick" />
+    </CFFlexBox>
+</div>
+
+@code {
+    [Parameter] public EventCallback<TStyle> OnClick { get; set; }
+
+    Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem callback, object arg) => callback.InvokeAsync(arg);
+}

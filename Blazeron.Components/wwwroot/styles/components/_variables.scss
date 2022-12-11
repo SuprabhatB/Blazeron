@@ -1,0 +1,37 @@
+﻿$font-size-root: null !default;
+$font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
+$font-size-xs: $font-size-base * .75 !default;
+$font-size-md: $font-size-base * 1 !default;
+$font-size-xl: $font-size-base * 1.50 !default;
+
+$border-radius-xs: .1rem !default;
+$border-radius-md: .25rem !default;
+$border-radius-xl: .5rem !default;
+
+$input-btn-padding-y-xs: .125rem !default;
+$input-btn-padding-x-xs: .25rem !default;
+$input-btn-font-size-xs: $font-size-xs !default;
+
+$input-btn-padding-y-md: .375rem !default;
+$input-btn-padding-x-md: .75rem !default;
+$input-btn-font-size-md: $font-size-md !default;
+
+$input-btn-padding-y-xl: 1rem !default;
+$input-btn-padding-x-xl: 2rem !default;
+$input-btn-font-size-xl: $font-size-xl !default;
+
+$btn-border-radius-xs: $border-radius-xs !default;
+$btn-border-radius-md: $border-radius-md !default;
+$btn-border-radius-xl: $border-radius-xl !default;
+
+$btn-padding-y-xs: $input-btn-padding-y-xs !default;
+$btn-padding-x-xs: $input-btn-padding-x-xs !default;
+$btn-font-size-xs: $input-btn-font-size-xs !default;
+
+$btn-padding-y-md: $input-btn-padding-y-md !default;
+$btn-padding-x-md: $input-btn-padding-x-md !default;
+$btn-font-size-md: $input-btn-font-size-md !default;
+
+$btn-padding-y-xl: $input-btn-padding-y-xl !default;
+$btn-padding-x-xl: $input-btn-padding-x-xl !default;
+$btn-font-size-xl: $input-btn-font-size-xl !default;

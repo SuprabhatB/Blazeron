@@ -1,0 +1,114 @@
+﻿@inject IIdGenerator IdGenerator
+
+@using Blazeron.Components.UI.Layouts.Flex
+
+<div class="tag-container">
+    <div id="@($"{ElementId}_tagsinput")" class="tagsinput">
+        @if (TData != null && TData.Any())
+        {
+            @foreach (var data in TData)
+            {
+                <span class="tag @BackgroundStyle">
+                    <span class="tag-text">@data</span>
+                    <span class="tag-remove" @onclick="() => DeleteTag(data)" />
+                </span>
+            }
+        }
+
+        <div id="@($"{ElementId}_addTag")">
+            <div class="@PreventSpecialCharacter.RemoveWhiteSpaces()">
+                <input id="@($"{ElementId}_tag")"
+                       class="tag-input"
+                       placeholder="@Placeholder"
+                       autocomplete="@AutoCompleteEnabled" @bind-value="@Tag.Name"
+                       @bind-value:event="oninput"
+                       @onkeyup="AddTagAsync" />
+
+                @if (Tag.IsShowValidation)
+                {
+                    <CFFlexBox IsInline="true" Align="FlexAlignType.Center" CSSClass="error-right p-2">
+                        <i class="oi oi-warning text-warning p-1"></i>
+                        <p class="text-left m-0 p-1">
+                            @ValidationMessage
+                        </p>
+                        <i></i>
+                    </CFFlexBox>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    @using Blazeron.Components.Models.Inputs;
+
+    [Inject] IStringLocalizer<BlazeronLocale> Localizer { get; set; }
+
+    [Parameter] public IEnumerable<string> TData { get; set; }
+    [Parameter] public string Placeholder { get; set; }
+    [Parameter] public string ValidationText { get; set; }
+    [Parameter] public bool AllowSpecialCharacter { get; set; }
+    [Parameter] public bool AllowAutoComplete { get; set; }
+    [Parameter] public ButtonVariantType Variant { get; set; }
+
+    [Parameter] public EventCallback<IEnumerable<string>> OnAdd { get; set; }
+    [Parameter] public EventCallback<IEnumerable<string>> OnDelete { get; set; }
+
+    string ElementId => IdGenerator.Generate;
+    TagModel Tag { get; set; } = new TagModel();
+
+    string BackgroundStyle => GetTagVariantStyle();
+    string PreventSpecialCharacter => !AllowSpecialCharacter ? $"{UIConstants.TagPrefix}-{UIConstants.Tooltip}" : string.Empty;
+    string AutoCompleteEnabled => AllowAutoComplete ? UIConstants.AutoCompleteOn : UIConstants.AutoCompleteOff;
+    string ValidationMessage => string.IsNullOrWhiteSpace(ValidationText) ? Localizer.GetString(LocaleConstants.SpecialCharacterNotAllowed).Value : ValidationText;
+
+    string GetTagVariantStyle()
+    {
+        var tagVariantPrefix = $"{UIConstants.TagPrefix}-";
+
+        if (Variant.Equals(ButtonVariantType.None) || Variant.Equals(ButtonVariantType.Link))
+            return $"{tagVariantPrefix}{ButtonVariantType.Primary.GetDisplayName()}";
+
+        return $"{tagVariantPrefix}{Variant.GetDisplayName()}";
+    }
+
+    async Task AddTagAsync(KeyboardEventArgs eventArgs)
+    {
+        if (string.IsNullOrWhiteSpace(Tag.Name)) return;
+
+        if (eventArgs.Key.Equals(UIConstants.KeyboardEnter))
+        {
+            var hasValidation = !AllowSpecialCharacter ? Tag.Name.IsMatchAlphabetsAndDigits() : default;
+            if (hasValidation)
+            {
+                Tag.IsShowValidation = hasValidation;
+            }
+            else
+            {
+                var tags = TData.EmptyIfDefault().ToList();
+                if (!tags.Contains(Tag.Name, StringComparer.InvariantCultureIgnoreCase))
+                {
+                    tags.Add(Tag.Name);
+
+                    Tag.Name = default;
+                    Tag.IsShowValidation = default;
+
+                    await OnAdd.InvokeAsync(tags);
+                }
+            }
+        }
+    }
+
+    async Task DeleteTag(string value)
+    {
+        if (TData != null && TData.Any())
+        {
+            var tags = TData.ToList();
+
+            tags.Remove(value);
+
+            await OnDelete.InvokeAsync(tags);
+        }
+    }
+}

@@ -1,0 +1,30 @@
+﻿@if (Template != null)
+{
+    <div class="@CombinedHeadingStyle">
+        @Template
+    </div>
+}
+else if (ChildContent != null)
+{
+    <div class="@CombinedHeadingStyle">
+        @ChildContent
+    </div>
+}
+else
+{
+    <div class="@CombinedHeadingStyle">
+        @Content
+    </div>
+}
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment Template { get; set; }
+    [Parameter] public string Content { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+
+    string AlertHeadingStyle => $"{UIConstants.AlertPrefix}-{UIConstants.HeadingPrefix}";
+
+    string CombinedHeadingStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly, AlertHeadingStyle, CSSClass).RemoveWhiteSpaces();
+}

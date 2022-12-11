@@ -1,0 +1,21 @@
+﻿<span class="@CombinedIconContainerStyle">
+    <i class="@CombinedIconStyle"></i>
+</span>
+
+@code {
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public string Icon { get; set; }
+    [Parameter] public ColorType Variant { get; set; }
+    [Parameter] public TextColorType ForeColor { get; set; }
+    [Parameter] public ButtonIconStyleType Style { get; set; }
+
+    string CombinedIconContainerStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly, IconContainerVariantStyle, CSSClass).RemoveWhiteSpaces();
+
+    string CombinedIconStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly, Icon, IconTextVariantStyle).RemoveWhiteSpaces();
+
+    string IconContainerStyle => string.Empty;
+    string IconContainerVariantStyle => Variant.GetBackgroundVariant();
+    string IconTextVariantStyle => ForeColor.GetTextColor();
+}

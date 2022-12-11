@@ -1,0 +1,31 @@
+﻿<img src="@Source" class="@CombinedImageStyle" @attributes="Attributes" />
+
+@code {
+    [Parameter] public string Source { get; set; }
+    [Parameter] public string AlternateText { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public bool IsResponsive { get; set; }
+    [Parameter] public bool IsThumbnail { get; set; }
+    [Parameter] public bool IsRounded { get; set; }
+
+    string ImageResponsiveStyle => IsResponsive ? $"{UIConstants.ImagePrefix}-{UIConstants.ContainerFluid}" : default;
+    string ImageThumbnailStyle => IsThumbnail ? $"{UIConstants.ImagePrefix}-{UIConstants.ImageThumbnail}" : default;
+    string ImageRoundedStyle => IsRounded ? UIConstants.RoundedPrefix : default;
+
+    string CombinedImageStyle
+        => string.Join(SeparatorConstants.SeparatedBySpaceOnly, ImageResponsiveStyle, ImageThumbnailStyle, ImageRoundedStyle, CSSClass).RemoveWhiteSpaces();
+
+    IReadOnlyDictionary<string, object> Attributes => GetCustomAttributes();
+
+    IReadOnlyDictionary<string, object> GetCustomAttributes()
+    {
+        var attributes = new Dictionary<string, object>();
+
+        if (!string.IsNullOrWhiteSpace(AlternateText))
+        {
+            attributes.Add(UIConstants.AttributeImageAlt, AlternateText);
+        }
+
+        return attributes;
+    }
+}

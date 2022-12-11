@@ -1,0 +1,13 @@
+﻿<div class="@CombinedAccordiionStyle">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+
+    string AccordionStyle => UIConstants.AccordionPrefix;
+
+    string CombinedAccordiionStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly, AccordionStyle, CSSClass).RemoveWhiteSpaces();
+}

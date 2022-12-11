@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime jSRuntime
+
+<div class="wrapper d-flex align-items-stretch">
+    <NavMenu />
+    <!-- Page Content  -->
+    <div id="content" class="content-wrapper px-5 py-4">
+        @Body
+    </div>
+</div>
+
+@code
+{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await jSRuntime.InvokeVoidAsync(JSConstants.HashScroll);
+        }
+    }
+}

@@ -1,0 +1,11 @@
+﻿<span class="@VHStyle">
+    @ChildContent
+</span>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public bool IsFocusable { get; set; }
+
+    string VHStyle => IsFocusable ? $"{UIConstants.VisuallyHiddenPrefix}-{UIConstants.FocusablePrefix}" : UIConstants.VisuallyHiddenPrefix;
+
+}

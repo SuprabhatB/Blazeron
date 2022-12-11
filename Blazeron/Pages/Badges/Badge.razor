@@ -1,0 +1,78 @@
+﻿@page "/component/ui/badge"
+@inherits PageComponentsBase
+
+<Header Heading="@Localizer.GetString(BlazeronLocale.BadgeLabel)" />
+
+<Section>
+    <h2>
+        @Localizer.GetString(BlazeronLocale.BadgeSimpleLabel)
+        <NavIcon ID="@DOMConstants.BadgeSimple" Href="@RouteConstants.Badge" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <CFBadge Variant="ColorType.Primary">Example</CFBadge>
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.BackgroundColorsLabel)
+        <NavIcon ID="@DOMConstants.BadgeBackgrounds" Href="@RouteConstants.Badge" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    @foreach (var variant in variants)
+    {
+        <CFBadge Variant="variant" CSSClass="me-2">@variant</CFBadge>
+    }
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.BadgePillLabel)
+        <NavIcon ID="@DOMConstants.BadgePills" Href="@RouteConstants.Badge" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    @foreach (var variant in variants)
+    {
+        <CFBadge Variant="variant" BorderType="BadgeRadiusType.Pill" CSSClass="me-2">@variant</CFBadge>
+    }
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.ButtonsLabel)
+        <NavIcon ID="@DOMConstants.BadgeButtons" Href="@RouteConstants.Badge" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <CFButton Type="ButtonType.Button" Variant="ButtonVariantType.Primary">
+        @Localizer.GetString(BlazeronLocale.NotificationsLabel)
+        <CFBadge Variant="ColorType.Secondary">10</CFBadge>
+    </CFButton>
+
+    <h2>
+        @Localizer.GetString(BlazeronLocale.PositionedLabel)
+        <NavIcon ID="@DOMConstants.BadgePositioned" Href="@RouteConstants.Badge" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+    </h2>
+
+    <CFButton Type="ButtonType.Button" Variant="ButtonVariantType.Primary" CSSClass="position-relative">
+        @Localizer.GetString(BlazeronLocale.InboxLabel)
+        <CFBadge Variant="ColorType.Danger" BorderType="BadgeRadiusType.Pill" CSSClass="position-absolute top-0 start-100 translate-middle">
+            99+
+            <CFScreenReaders>
+                @Localizer.GetString(BlazeronLocale.UnreadMessagesLabel)
+            </CFScreenReaders>
+        </CFBadge>
+    </CFButton>
+
+    <CFButton Type="ButtonType.Button" Variant="ButtonVariantType.Primary" CSSClass="position-relative ms-4">
+        @Localizer.GetString(BlazeronLocale.ProfileLabel)
+        <CFBadge Variant="ColorType.Danger" BorderType="BadgeRadiusType.Circle" CSSClass="position-absolute top-0 start-100 translate-middle p-2 border border-light">
+            10
+            <CFScreenReaders>
+                @Localizer.GetString(BlazeronLocale.NewAlertsLabel)
+            </CFScreenReaders>
+        </CFBadge>
+    </CFButton>
+</Section>
+
+@code {
+    ColorType variantType;
+    IEnumerable<ColorType> variants;
+
+    protected override void OnInitialized() => variants = Enum.GetValues(typeof(ColorType)).Cast<ColorType>().Except(new[] { ColorType.None });
+
+    void OnClicked(ColorType colorType) => variantType = colorType;
+}
+

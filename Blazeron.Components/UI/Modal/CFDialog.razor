@@ -1,0 +1,115 @@
+﻿@inject IIdGenerator IdGenerator
+
+@using Blazeron.Components.UI.Buttons
+@using Blazeron.Components.UI.Layouts.Flex
+
+@if (Visibility)
+{
+    <div id="@ElementId" class="@CombinedModalStyle" tabindex="-1" role="dialog" @attributes="Attributes">
+        <div class="@CombinedModalDialogStyle" role="document">
+            <div class="@CombinedModalContentStyle">
+                <div class="modal-header">
+                    <CFFlexBox Align="FlexAlignType.Center" Justify="FlexJustifyType.Start" CSSClass="w-100">
+                        <h5 class="modal-title">@Title</h5>
+                        <div class="ms-auto">
+                            @HeaderContent
+
+                            @if (IsShowCloseIcon)
+                            {
+                                <CFButton Type="ButtonType.Button" CSSClass="btn-close" aria-label="Close" @onclick="OnClosed" />
+                            }
+                        </div>
+                    </CFFlexBox>
+                </div>
+                <div class="modal-body" @attributes="BodyAttributes">
+                    @Content
+                </div>
+
+                @if (IsShowFooter)
+                {
+                    <div class="modal-footer">
+                        @FooterContent
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    [Parameter] public RenderFragment Content { get; set; }
+    [Parameter] public RenderFragment HeaderContent { get; set; }
+    [Parameter] public RenderFragment FooterContent { get; set; }
+    [Parameter] public ModalSizeType Size { get; set; }
+    [Parameter] public BorderSizeType BorderSize { get; set; }
+    [Parameter] public bool Visibility { get; set; }
+    [Parameter] public bool IsVerticallyCentered { get; set; }
+    [Parameter] public bool IsScrollable { get; set; }
+    [Parameter] public bool IsShowCloseIcon { get; set; }
+    [Parameter] public bool IsShowFooter { get; set; } = true;
+    [Parameter] public string Title { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public ushort MinHeight { get; set; }
+
+    [Parameter] public EventCallback<MouseEventArgs> OnClosed { get; set; }
+
+    string ElementId => $"{UIConstants.ModalPrefix}-{IdGenerator.Generate}";
+
+    string ModalStyle => UIConstants.ModalPrefix;
+    string ModalDialogStyle => $"{UIConstants.ModalPrefix}-{UIConstants.DialogPrefix}";
+    string ModalContentStyle => $"{UIConstants.ModalPrefix}-{UIConstants.ContentPrefix}";
+    string ModalDialogVerticallyCenteredStyle => IsVerticallyCentered ? $"{ModalDialogStyle}-{UIConstants.DialogCenteredPrefix}" : default;
+    string ModalDialogScrollableStyle => IsScrollable ? $"{ModalDialogStyle}-{UIConstants.DialogScrollablePrefix}" : default;
+    string ModalDialogSizeStyle => GetDialogSizeStyle();
+    string ModalBorderSizeStyle => BorderSize.GetBorderSize();
+
+    string CombinedModalStyle => string.Join(SeparatorConstants.SeparatedBySpaceOnly, ModalStyle, UIConstants.ModalFadeStyle, UIConstants.ElementShow).RemoveWhiteSpaces();
+    string CombinedModalDialogStyle
+        => string.Join(SeparatorConstants.SeparatedBySpaceOnly, ModalDialogStyle, ModalDialogVerticallyCenteredStyle, ModalDialogScrollableStyle, ModalDialogSizeStyle, CSSClass).RemoveWhiteSpaces();
+    string CombinedModalContentStyle => string.Join(SeparatorConstants.SeparatedBySpaceOnly, ModalContentStyle, ModalBorderSizeStyle).RemoveWhiteSpaces();
+
+    IReadOnlyDictionary<string, object> Attributes => GetCustomAttributes();
+    IReadOnlyDictionary<string, object> BodyAttributes => GetBodyAttributes();
+
+    const string styleSeperator = "; ";
+
+    string GetDialogSizeStyle()
+    {
+        if (Size == ModalSizeType.None)
+            return default;
+
+        return $"{UIConstants.ModalPrefix}-{Size.GetDisplayName()}";
+    }
+
+    IReadOnlyDictionary<string, object> GetCustomAttributes()
+    {
+        var attributes = new Dictionary<string, object>();
+        var styles = new List<string>();
+
+        styles.Add(Visibility ? UIConstants.ModalShowStyle : UIConstants.ModalHideStyle);
+
+        attributes.Add("style", string.Join(styleSeperator, styles));
+
+        return attributes;
+    }
+
+    IReadOnlyDictionary<string, object> GetBodyAttributes()
+    {
+        var attributes = new Dictionary<string, object>();
+        var styles = new List<string>();
+
+        if (MinHeight > 0)
+        {
+            styles.Add($"{UIConstants.AttributeMinHeight}: {MinHeight}px");
+        }
+
+        if (styles.Any())
+        {
+            attributes.Add("style", string.Join(styleSeperator, styles));
+        }
+
+        return attributes;
+    }
+}

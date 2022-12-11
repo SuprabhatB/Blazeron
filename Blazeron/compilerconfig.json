@@ -1,0 +1,10 @@
+﻿[
+  {
+    "outputFile": "wwwroot/js/blazeron.min.js",
+    "inputFile": "wwwroot/js/blazeron.js"
+  },
+  {
+    "outputFile": "wwwroot/css/site.css",
+    "inputFile": "wwwroot/scss/site/site.scss"
+  }
+]

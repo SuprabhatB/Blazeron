@@ -1,0 +1,17 @@
+﻿<span class="@CombinedBadgeStyle">
+    @ChildContent
+</span>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public ColorType Variant { get; set; }
+    [Parameter] public BadgeRadiusType BorderType { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+
+    string BadgeStyle => UIConstants.BadgePrefix;
+    string BadgeVariantStyle => Variant.GetBackgroundVariant();
+    string BadgeRadiusStyle => BorderType.GetBadgeRadiusType();
+
+    string CombinedBadgeStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly, BadgeStyle, BadgeVariantStyle, BadgeRadiusStyle, CSSClass).RemoveWhiteSpaces();
+}

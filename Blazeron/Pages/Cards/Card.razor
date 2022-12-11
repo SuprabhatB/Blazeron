@@ -1,0 +1,47 @@
+﻿@page "/component/ui/card"
+@inherits PageComponentsBase
+
+<Header Heading="@Localizer.GetString(BlazeronLocale.CardLabel)" />
+
+<Section>
+    <div class="row">
+        <div class="col-4">
+            <h2>
+                @Localizer.GetString(BlazeronLocale.DefaultCardLabel)
+                <NavIcon ID="@DOMConstants.CardBasic" Href="@RouteConstants.Card" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+            </h2>
+            <CFCard>
+                <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <title>Placeholder</title>
+                    <rect width="100%" height="100%" fill="#868e96"></rect>
+                    <text x="37%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+                </svg>
+                <CFCardBody>
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </CFCardBody>
+            </CFCard>
+        </div>
+        <div class="col-4">
+            <h2>
+                @Localizer.GetString(BlazeronLocale.CardWithHeaderAndFooter)
+                <NavIcon ID="@DOMConstants.CardHeaderFooter" Href="@RouteConstants.Card" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+            </h2>
+            <CFCard>
+                <CFCardHeader>
+                    Featured
+                </CFCardHeader>
+                <CFCardBody>
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </CFCardBody>
+            </CFCard>
+        </div>
+    </div>
+</Section>
+
+@code {
+
+}

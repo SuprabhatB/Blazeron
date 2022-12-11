@@ -1,0 +1,23 @@
+﻿@using Blazeron.Components.UI.Accessibility
+
+<span class="@CombinedIconStyle" aria-hidden="true">
+    @ChildContent
+</span>
+
+@if (IsSREnabled)
+{
+    <CFScreenReaders>
+        @SRContent
+    </CFScreenReaders>
+}
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment SRContent { get; set; }
+    [Parameter] public string Icon { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public bool IsSREnabled { get; set; }
+
+    string CombinedIconStyle =>
+        string.Join(SeparatorConstants.SeparatedBySpaceOnly, Icon, CSSClass).RemoveWhiteSpaces();
+}

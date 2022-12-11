@@ -1,0 +1,29 @@
+﻿@inject NavigationManager Navigation
+@inject IJSRuntime jsRuntime
+
+<CFNavLink ID="@ID" Href="@HyperText" Title="@Title" CSSClass="@CSSClass" IsPreventDefault="IsPreventDefault"
+           @onclick="UpdateURIAsync">
+    <CFIcon Icon="@Icon" CSSClass="@IconCSSClass" />
+</CFNavLink>
+
+@code {
+    [Parameter] public string ID { get; set; }
+    [Parameter] public string Href { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public string Icon { get; set; }
+    [Parameter] public string IconCSSClass { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public bool IsPreventDefault { get; set; }
+
+    string HyperText => !IsPreventDefault ? Href : default;
+
+    async Task UpdateURIAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Href) && !string.IsNullOrWhiteSpace(ID) && IsPreventDefault)
+        {
+            var nav = Navigation.TryCreateURI(Href, default, ID);
+
+            await jsRuntime.InvokeVoidAsync(JSConstants.AddToBrowserHistory, nav);
+        }
+    }
+}

@@ -1,0 +1,139 @@
+﻿@page "/component/ui/alert"
+@inherits PageComponentsBase
+
+<Header Heading="@Localizer.GetString(BlazeronLocale.AlertLabel)" />
+
+<Section IsFixedHeight="false" SubtractiveHeight="324">
+    <HeaderTemplate>
+        <Styles TStyle="ColorType" OnClick="OnClicked" />
+    </HeaderTemplate>
+    <ContentTemplate>
+        <h2>
+            @Localizer.GetString(BlazeronLocale.AlertSimpleLabel)
+            <NavIcon ID="@DOMConstants.AlertSimple" Href="@RouteConstants.Alert" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+        </h2>
+
+        <CFAlert Content="@content" Variant="variantType" />
+
+        <h2>
+            @Localizer.GetString(BlazeronLocale.AlertSimpleGradientLabel)
+            <NavIcon ID="@DOMConstants.AlertSimpleGradient" Href="@RouteConstants.Alert" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+        </h2>
+
+        <CFAlert Content="@content" IsGradient="true" Variant="variantType" />
+
+        <h2>
+            @Localizer.GetString(BlazeronLocale.TemplateLabel)
+            <NavIcon ID="@DOMConstants.AlertTemplate" Href="@RouteConstants.Alert" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+        </h2>
+
+        <CFAlert Variant="variantType">
+            <Template>
+                <h4 class="alert-heading">What is Lorem Ipsum?</h4>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                <hr>
+                @Localizer.GetString(BlazeronLocale.ReferenceLabel):
+                <a href="https://lipsum.com/" target="_blank" class="mb-0">Lorem Ipsum (https://lipsum.com/)</a>
+            </Template>
+        </CFAlert>
+
+        <h2>
+            @Localizer.GetString(BlazeronLocale.IconsLabel)
+            <NavIcon ID="@DOMConstants.AlertIcons" Href="@RouteConstants.Alert" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+        </h2>
+
+        <CFAlert Content="@content" Variant="variantType" IsShowIcon="true" IconContent="fa fa-exclamation-triangle" IconCSSClass="fs-4 me-2" IsInline="true" />
+
+        <h2>
+            @Localizer.GetString(BlazeronLocale.DismissingLabel)
+            <NavIcon ID="@DOMConstants.AlertDismissing" Href="@RouteConstants.Alert" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+        </h2>
+
+        <CFAlert Content="@content" Variant="variantType" IsShowIcon="true" IconContent="fa fa-info-circle" IconCSSClass="fs-4 me-2" IsDismissible="true" EffectType="AnimationEffectType.Fade" IsInline="true" />
+
+        <h2>
+            @Localizer.GetString(BlazeronLocale.DismissingEffectsLabel)
+            <NavIcon ID="@DOMConstants.AlertDismissingEffects" Href="@RouteConstants.Alert" Icon="fa fa-link" CSSClass="permlink" IsPreventDefault="true" />
+        </h2>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-3 p-0">
+                    <select class="form-select" aria-label="select" @onchange="OnAnimationEffectChange">
+                        <option selected>-- Select effects --</option>
+                        @if (effectTypes != default && effectTypes.Any())
+                        {
+                            foreach (var item in effectTypes)
+                            {
+                                <option value="@item.Id" selected="@(defaultEffectId == item.Id)">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-9">
+                    @{
+                        var labelText = isShowDismissbleAlert ?
+                        Localizer.GetString(BlazeronLocale.DismissingAlertHideLabel).Value :
+                        Localizer.GetString(BlazeronLocale.DismissingAlertShowLabel).Value;
+                    }
+
+                    <CFButton Type="ButtonType.Button" Variant="ButtonVariantType.Primary" Value="@labelText" OnClick="ShowOrHideDismissbleAlert" />
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-12 px-0">
+                    @if (isShowDismissbleAlert)
+                    {
+                        <CFAlert Content="@content" Variant="variantType" IsShowIcon="true" IconContent="fa fa-info-circle"
+                             IconCSSClass="fs-4 me-2" IsDismissible="true" EffectType="effectType" IsInline="true" OnClose="OnDismissbleAlertClose" />
+                    }
+                </div>
+            </div>
+        </div>
+    </ContentTemplate>
+</Section>
+
+@code {
+    const string displayText = "This is a simple {0} alert.";
+    string content = string.Format(displayText, ColorType.Primary.GetDisplayName());
+    int defaultEffectId = (int)AnimationEffectType.Fade;
+    bool isShowDismissbleAlert;
+
+    ColorType variantType;
+    AnimationEffectType effectType;
+    IEnumerable<ListItemModel<int>> effectTypes;
+
+    protected override void OnInitialized()
+    {
+        effectType = AnimationEffectType.Fade;
+        effectTypes = Enum.GetValues(typeof(AnimationEffectType)).Cast<AnimationEffectType>()
+            .Except(new[] { AnimationEffectType.None })
+            .Select(value => new ListItemModel<int>
+                {
+                    Id = (int)value,
+                    Name = value.ToString().ToSentenceCase()
+                }).AsEnumerable();
+    }
+
+    void OnClicked(ColorType colorType)
+    {
+        variantType = colorType;
+        content = string.Format(displayText, variantType.GetDisplayName());
+    }
+
+    void OnAnimationEffectChange(ChangeEventArgs args)
+    {
+        if (args != default && args.Value != default)
+        {
+            int.TryParse(args.Value.ToString(), out var parsedEffectId);
+
+            defaultEffectId = parsedEffectId;
+            effectType = (AnimationEffectType)Enum.GetValues(typeof(AnimationEffectType)).GetValue(parsedEffectId);
+        }
+    }
+
+    void ShowOrHideDismissbleAlert() => isShowDismissbleAlert = !isShowDismissbleAlert;
+
+    void OnDismissbleAlertClose() => isShowDismissbleAlert = default;
+}

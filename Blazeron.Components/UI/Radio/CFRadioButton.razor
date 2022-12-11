@@ -1,0 +1,25 @@
+﻿<div class="@CombinedContainerStyle">
+    <input class="form-check-input" type="radio" name="@Name" id="@Id"
+           checked="@IsChecked" disabled="@IsDisabled" value="@Value" @onchange="OnOptionChange">
+    <label class="form-check-label" for="@Id">@Text</label>
+</div>
+
+@code {
+    [Parameter] public string Text { get; set; }
+    [Parameter] public string Value { get; set; }
+    [Parameter] public string Name { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public bool IsInline { get; set; }
+    [Parameter] public bool IsChecked { get; set; }
+    [Parameter] public bool IsDisabled { get; set; }
+
+    [Parameter] public EventCallback<ChangeEventArgs> OnOptionChange { get; set; }
+
+    string RadionButtonStyle => UIConstants.FormCheckPrefix;
+    string RadionButtonInlineStyle => IsInline ? $"{UIConstants.FormCheckPrefix}-{UIConstants.InlinePrefix}" : default;
+
+    string CombinedContainerStyle
+        => string.Join(SeparatorConstants.SeparatedBySpaceOnly, RadionButtonStyle, RadionButtonInlineStyle, CSSClass).RemoveWhiteSpaces();
+
+    Guid Id => Guid.NewGuid();
+}

@@ -1,0 +1,84 @@
+﻿@typeparam TColor
+@inject IStringLocalizer<BlazeronLocale> localizer
+
+@if (RenderType == ButtonRenderType.Variants && buttonVariants.EmptyIfDefault().Any())
+{
+    <CFButtonRowGroup CSSClass="@CSSClass">
+        @foreach (var variant in buttonVariants)
+        {
+            <CFButton Type="ButtonType.Button" Variant="variant" IsOutlined="HasOutline" IsDisabled="IsDisabled" IsGradient="HasGradient" Size="Size"
+              Value="@variant.ToString()" OnClick="e => OnClicked(variant)" />
+        }
+    </CFButtonRowGroup>
+}
+
+@if (RenderType == ButtonRenderType.Sizes && buttonSizes.EmptyIfDefault().Any())
+{
+    <CFButtonRowGroup CSSClass="@CSSClass">
+        @foreach (var size in buttonSizes)
+        {
+            <CFButton Type="ButtonType.Button" Variant="ButtonVariantType.Primary" Size="size" Value="@(GetDisplayName(size))" />
+        }
+    </CFButtonRowGroup>
+}
+
+@code {
+    [Parameter] public bool IsDisabled { get; set; }
+    [Parameter] public bool IsShowLink { get; set; } = true;
+    [Parameter] public bool HasGradient { get; set; }
+    [Parameter] public bool HasOutline { get; set; }
+    [Parameter] public string CSSClass { get; set; }
+    [Parameter] public ButtonRenderType RenderType { get; set; }
+    [Parameter] public ButtonSizeType Size { get; set; }
+    [Parameter] public EventCallback<TColor> OnClick { get; set; }
+
+    IEnumerable<ButtonVariantType> buttonVariants;
+    IEnumerable<ButtonSizeType> buttonSizes;
+
+    string GetDisplayName(ButtonSizeType sizeType) =>
+        sizeType switch
+        {
+            ButtonSizeType.ExtraLarge => localizer.GetString(BlazeronLocale.ExtraLargeButtonLabel),
+            ButtonSizeType.Large => localizer.GetString(BlazeronLocale.LargeButtonLabel),
+            ButtonSizeType.Medium => localizer.GetString(BlazeronLocale.MediumButtonLabel),
+            ButtonSizeType.Small => localizer.GetString(BlazeronLocale.SmallButtonLabel),
+            ButtonSizeType.ExtraSmall => localizer.GetString(BlazeronLocale.ExtraSmallButtonLabel),
+            _ => default
+        };
+
+    protected override void OnInitialized()
+    {
+        var ignoreVariants = IsShowLink ? new[] { ButtonVariantType.None, ButtonVariantType.Default } : new[] { ButtonVariantType.None, ButtonVariantType.Default, ButtonVariantType.Link };
+        var ignoreSizes = new[] { ButtonSizeType.None, ButtonSizeType.ExtraLarge };
+
+        buttonVariants = Enum.GetValues(typeof(ButtonVariantType)).Cast<ButtonVariantType>().Except(ignoreVariants);
+        buttonSizes = Enum.GetValues(typeof(ButtonSizeType)).Cast<ButtonSizeType>().Except(ignoreSizes).OrderByDescending(od => (int)od);
+    }
+
+    async Task OnClicked(ButtonVariantType variantType)
+    {
+        var canInvoke = true;
+        dynamic type;
+
+        if (typeof(TColor) == typeof(ColorType))
+        {
+            Enum.TryParse(typeof(ColorType), variantType.ToString(), out var parsedVariantType);
+
+            type = parsedVariantType;
+        }
+        else if (typeof(TColor) == typeof(ButtonVariantType))
+        {
+            type = variantType;
+        }
+        else
+        {
+            type = null;
+            canInvoke = default;
+        }
+
+        if (canInvoke && type != null)
+        {
+            await OnClick.InvokeAsync((TColor)Convert.ChangeType(type, typeof(TColor)));
+        }
+    }
+}

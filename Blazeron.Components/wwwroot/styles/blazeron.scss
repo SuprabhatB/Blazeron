@@ -1,0 +1,13 @@
+﻿
+// bootstrap@5.2.0
+@import "../packages/bootstrap/scss/bootstrap.scss";
+
+// components
+@import "components/_buttons.scss";
+@import "components/_button-group.scss";
+
+// tags
+@import "tag-builder/main.scss";
+
+// animation
+@import "animation/main.scss";

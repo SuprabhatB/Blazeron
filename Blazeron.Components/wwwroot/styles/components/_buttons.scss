@@ -1,0 +1,21 @@
+﻿
+@import "../../packages/bootstrap/scss/mixins";
+
+//variables
+@import "../components/_variables.scss";
+
+//
+// Button Sizes
+//
+
+.btn-xs {
+    @include button-size($btn-padding-y-xs, $btn-padding-x-xs, $btn-font-size-xs, $btn-border-radius-xs);
+}
+
+.btn-md {
+    @include button-size($btn-padding-y-md, $btn-padding-x-md, $btn-font-size-md, $btn-border-radius-md);
+}
+
+.btn-xl {
+    @include button-size($btn-padding-y-xl, $btn-padding-x-xl, $btn-font-size-xl, $btn-border-radius-xl);
+}

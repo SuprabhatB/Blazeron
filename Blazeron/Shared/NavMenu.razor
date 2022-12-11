@@ -1,0 +1,135 @@
+﻿@using Blazeron.Components.UI.Buttons
+
+<nav @ref="sideBarRef" class="sidebar">
+    <div class="custom-menu">
+        <button @ref="sideBarCollapseRef" type="button" class="btn btn-primary sidebar-collapse-btn">
+            <i class="fa fa-bars"></i>
+            <span class="sr-only">Toggle Menu</span>
+        </button>
+    </div>
+    <div class="p-4">
+        <h1><a href="#" class="logo">Blazeron</a></h1>
+
+        <nav class="collapse nav-links" aria-label="navigation-menu">
+            <ul class="list-unstyled">
+                <li class="mb-1">
+                    <CFButton CSSClass="d-inline-flex align-items-center rounded" Attributes="CreateAttributes(true)" OnClick="ExpandCollapseMenuAsync">
+                        Getting started
+                    </CFButton>
+                    <div class="collapse show" id="getting-started-collapse">
+                        <ul class="list-unstyled">
+                            <li>
+                                <NavLink href="@RouteConstants.Root" class="nav-link" Match="NavLinkMatch.All">
+                                    <span class="ms-2">Introduction</span>
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <CFButton CSSClass="d-inline-flex align-items-center rounded collapsed" Attributes="CreateAttributes()" OnClick="ExpandCollapseMenuAsync">
+                        Forms
+                    </CFButton>
+                    <div class="collapse" id="forms">
+                        <ul class="list-unstyled">
+                            <li>
+                                <NavLink href="@RouteConstants.Root" class="nav-link">
+                                    <span class="ms-2">Dropdown</span>
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <CFButton CSSClass="d-inline-flex align-items-center rounded collapsed" Attributes="CreateAttributes()" OnClick="ExpandCollapseMenuAsync">
+                        Components
+                    </CFButton>
+                    <div class="collapse" id="components">
+                        <ul class="list-unstyled">
+                            <li>
+                                <NavLink href="@RouteConstants.Root" class="nav-link">
+                                    <span class="ms-2">Accordion</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="@RouteConstants.Alert" class="nav-link">
+                                    <span class="ms-2">Alert</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="@RouteConstants.Badge" class="nav-link">
+                                    <span class="ms-2">Badge</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="@RouteConstants.Button" class="nav-link">
+                                    <span class="ms-2">Button</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="@RouteConstants.Card" class="nav-link">
+                                    <span class="ms-2">Card</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="@RouteConstants.Progress" class="nav-link">
+                                    <span class="ms-2">Progress</span>
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="mb-1">
+                    <CFButton CSSClass="d-inline-flex align-items-center rounded collapsed" Attributes="CreateAttributes()" OnClick="ExpandCollapseMenuAsync">
+                        Controls
+                    </CFButton>
+                    <div class="collapse" id="controls">
+                        <ul class="list-unstyled">
+                            <li>
+                                <NavLink href="@RouteConstants.InputTags" class="nav-link">
+                                    <span class="ms-2">Tags Input</span>
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="footer">
+            <p>Copyright &copy; @System.DateTime.Now.Year All rights reserved</p>
+        </div>
+    </div>
+</nav>
+
+@code {
+    @using Microsoft.JSInterop;
+    @using System.Collections.ObjectModel;
+    @using Blazeron.Components.Models.Events;
+
+    [Inject] IJSRuntime JSRuntime { get; set; }
+
+    ElementReference sideBarRef;
+    ElementReference sideBarCollapseRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync(JSConstants.ToggleSidebar, sideBarRef, sideBarCollapseRef);
+        }
+    }
+
+    IReadOnlyDictionary<string, object> CreateAttributes(bool isAriaExpanded = default) =>
+        new ReadOnlyDictionary<string, object>(
+            new Dictionary<string, object>() { { "aria-expanded", isAriaExpanded.ToString().ToLower() } }
+        );
+
+    async Task ExpandCollapseMenuAsync(ButtonClickEvent args)
+    {
+        if (args != default)
+        {
+            await JSRuntime.InvokeVoidAsync(JSConstants.ToggleSidebarMenu, args.Element);
+        }
+    }
+}
